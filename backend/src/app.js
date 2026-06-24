@@ -3,11 +3,13 @@ const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
 
-
 require('dotenv').config();
-
 const app = express();
+
 const { supabaseAdmin } = require('./config/supabase');
+const authRoutes = require('./routes/authRoutes');
+
+
 //Middlewares globales
 app.use(helmet());
 app.use(cors());
@@ -20,19 +22,6 @@ app.get('/api/health', (req, res) => {
 });
 
 
-/* Ruta temporal de prueba - la vamos a quitar después
-app.get('/api/test-db', async (req, res) => {
-  const { data, error } = await supabaseAdmin
-    .from('exercises')
-    .select('*')
-    .limit(5);
-
-  if (error) {
-    return res.status(500).json({ error: error.message });
-  }
-
-  res.json({ message: 'Conexión exitosa', data });
-});*/
-
+app.use('/api/auth', authRoutes);
 
 module.exports = app;
