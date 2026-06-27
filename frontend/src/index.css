@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+@theme{
+  /* Fondo y superficies */
+  --color-bg: #16181D;
+  --color-surface: #1F2229;
+  --color-surface-hover: #2A2E37;
+
+  /* Texto */
+  --color-text-primary: #EDEEF0;
+  --color-text-secondary: #8A8F98;
+
+  /* Acentos por dominio */
+  --color-strength: #B8F23C;   /* entrenamiento / fuerza */
+  --color-effort: #FF5A5F;     /* esfuerzo / cardio / intensidad */
+  --color-nutrition: #5EC8FF;  /* nutrición / hidratación */
+
+  /* Tipografía */
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
