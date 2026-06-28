@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 import { useAuthStore } from "./store/authStore";
 import { getMeRequest } from "./services/authService";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -49,7 +50,7 @@ function App() {
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <div className="text-white p-8">Dashboard (próximamente)</div>
+            <Dashboard />
           </ProtectedRoute>
         }
       />
