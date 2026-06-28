@@ -37,12 +37,31 @@ async function register(req, res) {
     .select()
     .single();
 
-    if(profileError){
-        await supabaseAdmin.auth.admin.deleteUser(userId);
-        return res.status(400).json({ error: profileError.message });
-    }
+if (profileError) {
+    await supabaseAdmin.auth.admin.deleteUser(userId);
+    return res.status(400).json({ error: profileError.message });
+  }
 
-    res.status(201).json({ message: 'Usuario registrado correctamente', profile: profileData });
+  // Generamos una sesión real para hacer login automático
+  const { data: sessionData, error: sessionError } = await supabaseAdmin.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (sessionError) {
+    // El usuario y perfil ya se crearon correctamente, solo falló la sesión automática
+    return res.status(201).json({
+      message: 'Usuario registrado correctamente, pero inicia sesión manualmente',
+      profile: profileData
+    });
+  }
+
+  res.status(201).json({
+    message: 'Usuario registrado correctamente',
+    profile: profileData,
+    access_token: sessionData.session.access_token,
+    refresh_token: sessionData.session.refresh_token
+  });
 }
 
 // POST /api/auth/login
