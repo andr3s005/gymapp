@@ -56,7 +56,7 @@ function Register() {
       })
 
       // Tu backend de registro no devuelve un token, así que hacemos login automático después
-      login(data.profile, null)
+      login(data.profile, data.access_token)
       navigate('/dashboard')
     } catch (err) {
       setError(err.response?.data?.error || 'Error al registrarte')
