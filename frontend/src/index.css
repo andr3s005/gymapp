@@ -19,3 +19,9 @@
   --font-display: "Space Grotesk", sans-serif;
   --font-body: "Inter", sans-serif;
 }
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  margin: 0;
+}
