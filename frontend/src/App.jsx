@@ -6,11 +6,13 @@ import Dashboard from "./pages/Dashboard";
 import { useAuthStore } from "./store/authStore";
 import { getMeRequest } from "./services/authService";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { useThemeStore } from "./store/themeStore";
 
 function App() {
   const [checkingSession, setCheckingSession] = useState(true);
   const setUser = useAuthStore((state) => state.setUser);
   const logout = useAuthStore((state) => state.logout);
+  const applyStoredTheme = useThemeStore((state) => state.applyStoredTheme)
 
   useEffect(() => {
     async function checkSession() {
@@ -30,7 +32,7 @@ function App() {
         setCheckingSession(false);
       }
     }
-
+    applyStoredTheme();
     checkSession();
   }, []);
 
