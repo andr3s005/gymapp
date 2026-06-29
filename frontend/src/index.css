@@ -1,27 +1,37 @@
 @import "tailwindcss";
 
-@theme{
-  /* Fondo y superficies */
+@theme {
   --color-bg: #16181D;
   --color-surface: #1F2229;
   --color-surface-hover: #2A2E37;
 
-  /* Texto */
   --color-text-primary: #EDEEF0;
   --color-text-secondary: #8A8F98;
 
-  /* Acentos por dominio */
-  --color-strength: #B8F23C;   /* entrenamiento / fuerza */
-  --color-effort: #FF5A5F;     /* esfuerzo / cardio / intensidad */
-  --color-nutrition: #5EC8FF;  /* nutrición / hidratación */
+  --color-strength: #B8F23C;
+  --color-effort: #FF5A5F;
+  --color-nutrition: #5EC8FF;
 
-  /* Tipografía */
   --font-display: "Space Grotesk", sans-serif;
   --font-body: "Inter", sans-serif;
+}
+
+.light {
+  --color-bg: #F7F7F5;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #ECECE8;
+
+  --color-text-primary: #1A1B1E;
+  --color-text-secondary: #6B6F76;
+
+  --color-strength: #5C9A1B;
+  --color-effort: #D6363C;
+  --color-nutrition: #1B7FBE;
 }
 
 body {
   background-color: var(--color-bg);
   color: var(--color-text-primary);
   margin: 0;
+  transition: background-color 0.2s ease;
 }
