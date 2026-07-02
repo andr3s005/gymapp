@@ -2,13 +2,25 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import { useThemeStore } from "../../store/themeStore";
+import {
+  LayoutDashboard,
+  Dumbbell,
+  ListChecks,
+  Apple,
+  TrendingUp,
+  ChevronLeft,
+  ChevronRight,
+  LogOut,
+  Moon,
+  Sun,
+} from "lucide-react";
 
 const navItems = [
-  { label: "Resumen", path: "/dashboard", icon: "◆" },
-  { label: "Rutinas", path: "/routines", icon: "▣" },
-  { label: "Ejercicios", path: "/exercises", icon: "●" },
-  { label: "Nutrición", path: "/nutrition", icon: "◉" },
-  { label: "Progreso", path: "/progress", icon: "▲" },
+  { label: "Resumen", path: "/dashboard", icon: LayoutDashboard },
+  { label: "Rutinas", path: "/routines", icon: ListChecks },
+  { label: "Ejercicios", path: "/exercises", icon: Dumbbell },
+  { label: "Nutrición", path: "/nutrition", icon: Apple },
+  { label: "Progreso", path: "/progress", icon: TrendingUp },
 ];
 
 function Sidebar() {
@@ -42,15 +54,16 @@ function Sidebar() {
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="ml-auto text-text-secondary hover:text-text-primary text-sm"
+          className="ml-auto text-text-secondary hover:text-text-primary"
         >
-          {collapsed ? "›" : "‹"}
+          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
         </button>
       </div>
 
       <nav className="flex flex-col gap-0.5 p-2 flex-1">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
+          const Icon = item.icon;
           return (
             <Link
               key={item.path}
@@ -61,9 +74,11 @@ function Sidebar() {
                   : "text-text-secondary hover:bg-bg hover:text-text-primary"
               }`}
             >
-              <span className={isActive ? "text-strength" : ""}>
-                {item.icon}
-              </span>
+              <Icon
+                size={17}
+                className={isActive ? "text-strength" : ""}
+                strokeWidth={2}
+              />
               {!collapsed && <span>{item.label}</span>}
             </Link>
           );
@@ -95,14 +110,15 @@ function Sidebar() {
             className="w-full text-left px-2 py-1.5 text-text-secondary hover:text-text-primary text-xs rounded-lg flex items-center justify-between"
           >
             <span>Modo {theme === "dark" ? "oscuro" : "claro"}</span>
-            <span>{theme === "dark" ? "🌙" : "☀️"}</span>
+            {theme === "dark" ? <Moon size={14} /> : <Sun size={14} />}
           </button>
         )}
         {!collapsed && (
           <button
             onClick={logout}
-            className="w-full text-left px-2 py-1.5 mt-1 text-text-secondary hover:text-effort text-xs rounded-lg"
+            className="w-full text-left px-2 py-1.5 mt-1 text-text-secondary hover:text-effort text-xs rounded-lg flex items-center gap-1.5"
           >
+            <LogOut size={14} />
             Cerrar sesión
           </button>
         )}
