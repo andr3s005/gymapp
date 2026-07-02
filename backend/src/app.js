@@ -7,6 +7,7 @@ require('dotenv').config();
 const { supabaseAdmin } = require('./config/supabase');
 const authRoutes = require('./routes/authRoutes');
 const exerciseRoutes = require('./routes/exerciseRoutes');
+const routineRoutes = require('./routes/routineRoutes');
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/exercises', exerciseRoutes);
+app.use('/api/routines', routineRoutes);
 
 module.exports = app;
