@@ -8,6 +8,7 @@ import { getMeRequest } from "./services/authService";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useThemeStore } from "./store/themeStore";
 import Exercises from "./pages/Exercises";
+import Routines from "./pages/Routines";
 
 function App() {
   const [checkingSession, setCheckingSession] = useState(true);
@@ -66,6 +67,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Exercises />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/routines"
+        element={
+          <ProtectedRoute>
+            <Routines />
           </ProtectedRoute>
         }
       />
