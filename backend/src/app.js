@@ -8,6 +8,7 @@ const { supabaseAdmin } = require('./config/supabase');
 const authRoutes = require('./routes/authRoutes');
 const exerciseRoutes = require('./routes/exerciseRoutes');
 const routineRoutes = require('./routes/routineRoutes');
+const membershipRoutes = require('./routes/membershipRoutes');
 
 const app = express();
 
@@ -23,5 +24,6 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/exercises', exerciseRoutes);
 app.use('/api/routines', routineRoutes);
+app.use('/api/memberships', membershipRoutes);
 
 module.exports = app;
