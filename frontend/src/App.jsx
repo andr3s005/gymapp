@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { useThemeStore } from "./store/themeStore";
 import Exercises from "./pages/Exercises";
 import Routines from "./pages/Routines";
+import Memberships from "./pages/Memberships";
 
 function App() {
   const [checkingSession, setCheckingSession] = useState(true);
@@ -75,6 +76,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Routines />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/memberships"
+        element={
+          <ProtectedRoute>
+            <Memberships />
           </ProtectedRoute>
         }
       />

@@ -8,6 +8,7 @@ import {
   ListChecks,
   Apple,
   TrendingUp,
+  CreditCard,
   ChevronLeft,
   ChevronRight,
   LogOut,
@@ -21,6 +22,7 @@ const navItems = [
   { label: "Ejercicios", path: "/exercises", icon: Dumbbell },
   { label: "Nutrición", path: "/nutrition", icon: Apple },
   { label: "Progreso", path: "/progress", icon: TrendingUp },
+  { label: "Membresías", path: "/memberships", icon: CreditCard },
 ];
 
 function Sidebar() {
@@ -61,28 +63,30 @@ function Sidebar() {
       </div>
 
       <nav className="flex flex-col gap-0.5 p-2 flex-1">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors ${
-                isActive
-                  ? "bg-bg text-text-primary font-medium"
-                  : "text-text-secondary hover:bg-bg hover:text-text-primary"
-              }`}
-            >
-              <Icon
-                size={17}
-                className={isActive ? "text-strength" : ""}
-                strokeWidth={2}
-              />
-              {!collapsed && <span>{item.label}</span>}
-            </Link>
-          );
-        })}
+        {navItems
+          .filter((item) => !item.adminOnly || user?.role === 'admin')
+          .map((item) => {
+            const isActive = location.pathname === item.path;
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors ${
+                  isActive
+                    ? "bg-bg text-text-primary font-medium"
+                    : "text-text-secondary hover:bg-bg hover:text-text-primary"
+                }`}
+              >
+                <Icon
+                  size={17}
+                  className={isActive ? "text-strength" : ""}
+                  strokeWidth={2}
+                />
+                {!collapsed && <span>{item.label}</span>}
+              </Link>
+            );
+          })}
       </nav>
 
       <div className="p-2 border-t border-surface-hover">
