@@ -154,4 +154,19 @@ async function adminCreateUser(req, res) {
   res.status(201).json({ message: 'Usuario creado correctamente por admin', profile: profileData });
 }
 
-module.exports = { register, login, me, adminCreateUser };
+// GET /api/auth/users — solo admin, para el modal de nueva membresía
+async function getUsers(req, res) {
+  const { data, error } = await supabaseAdmin
+    .from('profiles')
+    .select('id, full_name, email, role')
+    .eq('role', 'user')
+    .order('full_name')
+
+  if (error) {
+    return res.status(500).json({ error: error.message })
+  }
+
+  res.json({ users: data })
+}
+
+module.exports = { register, login, me, adminCreateUser, getUsers };
