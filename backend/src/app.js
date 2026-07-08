@@ -6,9 +6,10 @@ require('dotenv').config();
 
 const { supabaseAdmin } = require('./config/supabase');
 const authRoutes = require('./routes/authRoutes');
-const exerciseRoutes = require('./routes/exerciseRoutes');
+const exerciseRoutes = require('./routes/exerciseRoutes')
 const routineRoutes = require('./routes/routineRoutes');
 const membershipRoutes = require('./routes/membershipRoutes');
+const coachRoutes = require('./routes/coachRoutes');
 
 const app = express();
 
@@ -25,5 +26,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/exercises', exerciseRoutes);
 app.use('/api/routines', routineRoutes);
 app.use('/api/memberships', membershipRoutes);
+app.use('/api/coaches', coachRoutes);
 
 module.exports = app;
