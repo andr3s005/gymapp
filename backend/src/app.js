@@ -10,6 +10,9 @@ const exerciseRoutes = require('./routes/exerciseRoutes')
 const routineRoutes = require('./routes/routineRoutes');
 const membershipRoutes = require('./routes/membershipRoutes');
 const coachRoutes = require('./routes/coachRoutes');
+const foodRoutes = require('./routes/foodRoutes');
+const recipeRoutes = require('./routes/recipeRoutes');
+const nutritionRoutes = require('./routes/nutritionRoutes');
 
 const app = express();
 
@@ -27,5 +30,8 @@ app.use('/api/exercises', exerciseRoutes);
 app.use('/api/routines', routineRoutes);
 app.use('/api/memberships', membershipRoutes);
 app.use('/api/coaches', coachRoutes);
+app.use('/api/foods', foodRoutes);
+app.use('/api/recipes', recipeRoutes);
+app.use('/api/nutrition', nutritionRoutes);
 
 module.exports = app;
