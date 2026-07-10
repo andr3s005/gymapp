@@ -94,6 +94,15 @@ async function createMembership(req, res) {
     annual: 'full',
   }
 
+  const coachIncludedByPlan = {
+    daily: false,
+    weekly: false,
+    monthly: false,
+    quarterly: true,
+    biannual: true,
+    annual: true,
+  }
+
   if (!planDays[plan_type]) {
     return res.status(400).json({ error: 'plan_type inválido' })
   }
@@ -110,6 +119,7 @@ async function createMembership(req, res) {
       end_date: end.toISOString().split('T')[0],
       status: 'active',
       app_access: appAccessByPlan[plan_type],
+      coach_included: coachIncludedByPlan[plan_type],
     })
     .select()
     .single()

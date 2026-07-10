@@ -119,7 +119,7 @@ async function assignCoach(req, res) {
     return res.status(400).json({ error: 'coach_id es obligatorio' })
   }
 
-  // Verificar que el coach existe y tiene role coach
+  // Verificar que el coach existe
   const { data: coach, error: coachError } = await supabaseAdmin
     .from('profiles')
     .select('id, full_name, specialty')
@@ -131,12 +131,63 @@ async function assignCoach(req, res) {
     return res.status(404).json({ error: 'Coach no encontrado' })
   }
 
-  // Desactivar asignación anterior si existe
-  await supabaseAdmin
+  // Verificar membresía activa del usuario
+  const { data: membership, error: membershipError } = await supabaseAdmin
+    .from('memberships')
+    .select('id, plan_type, status, coach_included, app_access')
+    .eq('user_id', client_id)
+    .in('status', ['active', 'grace_period'])
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single()
+
+  if (membershipError || !membership) {
+    return res.status(403).json({ error: 'Necesitas una membresía activa para asignar un coach' })
+  }
+
+  // Verificar si el plan permite coach
+  const plansWithoutCoach = ['daily', 'weekly']
+  if (plansWithoutCoach.includes(membership.plan_type)) {
+    return res.status(403).json({
+      error: 'Tu plan actual no incluye acceso a coach. Actualiza tu membresía para acceder a este servicio'
+    })
+  }
+
+  // Verificar si ya tiene un coach asignado y si puede cambiarlo
+  const { data: currentAssignment } = await supabaseAdmin
     .from('coach_assignments')
-    .update({ active: false })
+    .select('id, coach_id, assigned_at')
     .eq('client_id', client_id)
     .eq('active', true)
+    .single()
+
+  if (currentAssignment) {
+    // Si el coach es el mismo, no hacer nada
+    if (currentAssignment.coach_id === coach_id) {
+      return res.status(400).json({ error: 'Ya tienes este coach asignado' })
+    }
+
+    // Verificar si estamos en el primer día del mes (permitido cambiar)
+    const today = new Date()
+    const isFirstOfMonth = today.getDate() === 1
+
+    if (!isFirstOfMonth) {
+      const nextFirst = new Date(today.getFullYear(), today.getMonth() + 1, 1)
+      const daysUntilChange = Math.ceil((nextFirst - today) / (1000 * 60 * 60 * 24))
+      return res.status(403).json({
+        error: `Solo puedes cambiar de coach el primer día de cada mes. Faltan ${daysUntilChange} días para poder cambiar`
+      })
+    }
+  }
+
+  // Desactivar asignación anterior si existe
+  if (currentAssignment) {
+    await supabaseAdmin
+      .from('coach_assignments')
+      .update({ active: false })
+      .eq('client_id', client_id)
+      .eq('active', true)
+  }
 
   // Crear nueva asignación
   const { data, error } = await supabaseAdmin
@@ -156,6 +207,7 @@ async function assignCoach(req, res) {
   res.status(201).json({
     message: `Coach ${coach.full_name} asignado correctamente`,
     assignment: data,
+    coach_included: membership.coach_included,
   })
 }
 
