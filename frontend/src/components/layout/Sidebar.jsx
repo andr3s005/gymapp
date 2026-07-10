@@ -2,17 +2,18 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import { useThemeStore } from "../../store/themeStore";
-import { LayoutDashboard, Dumbbell, ListChecks, Apple, TrendingUp, CreditCard, Users, ChevronLeft, ChevronRight, LogOut, Moon, Sun } from 'lucide-react'
+import { LayoutDashboard, Dumbbell, ListChecks, Apple, TrendingUp, CreditCard, Users, Timer, ChevronLeft, ChevronRight, LogOut, Moon, Sun } from 'lucide-react'
 
 const navItems = [
-  { label: "Resumen", path: "/dashboard", icon: LayoutDashboard },
-  { label: "Rutinas", path: "/routines", icon: ListChecks },
-  { label: "Ejercicios", path: "/exercises", icon: Dumbbell },
-  { label: "Nutrición", path: "/nutrition", icon: Apple },
-  { label: "Progreso", path: "/progress", icon: TrendingUp },
+  { label: 'Resumen', path: '/dashboard', icon: LayoutDashboard },
+  { label: 'Sesiones', path: '/sessions', icon: Timer },
+  { label: 'Rutinas', path: '/routines', icon: ListChecks },
+  { label: 'Ejercicios', path: '/exercises', icon: Dumbbell },
+  { label: 'Nutrición', path: '/nutrition', icon: Apple },
+  { label: 'Progreso', path: '/progress', icon: TrendingUp },
   { label: 'Coaches', path: '/coaches', icon: Users },
   { label: 'Membresías', path: '/memberships', icon: CreditCard, adminOnly: true },
-];
+]
 
 function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
