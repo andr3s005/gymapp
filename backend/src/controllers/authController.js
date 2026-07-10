@@ -169,4 +169,64 @@ async function getUsers(req, res) {
   res.json({ users: data })
 }
 
-module.exports = { register, login, me, adminCreateUser, getUsers };
+// PUT /api/auth/profile — actualizar perfil del usuario actual
+async function updateProfile(req, res) {
+  const { full_name, height_cm, weight_kg, birth_date, gender, goal, avatar_url } = req.body
+
+  const { data, error } = await supabaseAdmin
+    .from('profiles')
+    .update({
+      full_name,
+      height_cm: height_cm ? Number(height_cm) : null,
+      weight_kg: weight_kg ? Number(weight_kg) : null,
+      birth_date: birth_date || null,
+      gender: gender || null,
+      goal: goal || null,
+      avatar_url: avatar_url || null,
+    })
+    .eq('id', req.user.id)
+    .select()
+    .single()
+
+  if (error) {
+    return res.status(400).json({ error: error.message })
+  }
+
+  res.json({ message: 'Perfil actualizado correctamente', profile: data })
+}
+
+// PUT /api/auth/password — cambiar contraseña
+async function updatePassword(req, res) {
+  const { current_password, new_password } = req.body
+
+  if (!current_password || !new_password) {
+    return res.status(400).json({ error: 'current_password y new_password son obligatorios' })
+  }
+
+  if (new_password.length < 8) {
+    return res.status(400).json({ error: 'La nueva contraseña debe tener al menos 8 caracteres' })
+  }
+
+  // Verificar contraseña actual haciendo login
+  const { error: loginError } = await supabaseAdmin.auth.signInWithPassword({
+    email: req.user.email,
+    password: current_password,
+  })
+
+  if (loginError) {
+    return res.status(401).json({ error: 'La contraseña actual es incorrecta' })
+  }
+
+  // Actualizar la contraseña
+  const { error } = await supabaseAdmin.auth.admin.updateUserById(req.user.id, {
+    password: new_password,
+  })
+
+  if (error) {
+    return res.status(400).json({ error: error.message })
+  }
+
+  res.json({ message: 'Contraseña actualizada correctamente' })
+}
+
+module.exports = { register, login, me, adminCreateUser, getUsers, updateProfile, updatePassword };
