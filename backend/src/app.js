@@ -13,6 +13,7 @@ const coachRoutes = require('./routes/coachRoutes');
 const foodRoutes = require('./routes/foodRoutes');
 const recipeRoutes = require('./routes/recipeRoutes');
 const nutritionRoutes = require('./routes/nutritionRoutes');
+const sessionRoutes = require('./routes/sessionRoutes');
 
 const app = express();
 
@@ -33,5 +34,6 @@ app.use('/api/coaches', coachRoutes);
 app.use('/api/foods', foodRoutes);
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/nutrition', nutritionRoutes);
+app.use('/api/sessions', sessionRoutes);
 
 module.exports = app;
