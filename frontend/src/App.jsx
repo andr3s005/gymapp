@@ -11,6 +11,7 @@ import Exercises from "./pages/Exercises";
 import Routines from "./pages/Routines";
 import Memberships from "./pages/Memberships";
 import Coaches from "./pages/Coaches";
+import Nutrition from "./pages/Nutrition";
 
 function App() {
   const [checkingSession, setCheckingSession] = useState(true);
@@ -93,6 +94,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Coaches />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/nutrition"
+        element={
+          <ProtectedRoute>
+            <Nutrition />
           </ProtectedRoute>
         }
       />
