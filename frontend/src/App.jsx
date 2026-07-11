@@ -14,6 +14,7 @@ import Coaches from "./pages/Coaches";
 import Nutrition from "./pages/Nutrition";
 import Sessions from "./pages/Sessions";
 import Profile from "./pages/Profile";
+import Progress from "./pages/Progress";
 
 function App() {
   const [checkingSession, setCheckingSession] = useState(true);
@@ -120,6 +121,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/progress"
+        element={
+          <ProtectedRoute>
+            <Progress />
           </ProtectedRoute>
         }
       />
