@@ -1,8 +1,12 @@
 {
-  "routes": [
+  "rewrites": [
     {
       "source": "/api/:path*",
       "destination": "https://ironcore-backend.onrender.com/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
