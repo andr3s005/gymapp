@@ -3,6 +3,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
 require('dotenv').config();
+
 const { supabaseAdmin } = require('./config/supabase');
 const authRoutes = require('./routes/authRoutes');
 const exerciseRoutes = require('./routes/exerciseRoutes')
@@ -17,14 +18,17 @@ const progressRoutes = require('./routes/progressRoutes');
 
 const app = express();
 
-app.use(helmet());
-app.use(cors({
+const corsOptions = {
   origin: [
     'https://ironcore-five.vercel.app',
     'http://localhost:5173',
   ],
   credentials: true,
-}));
+}
+
+app.use(cors(corsOptions))
+
+app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 
@@ -42,7 +46,5 @@ app.use('/api/recipes', recipeRoutes);
 app.use('/api/nutrition', nutritionRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/progress', progressRoutes);
-
-
 
 module.exports = app;
