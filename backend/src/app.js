@@ -3,9 +3,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
 require('dotenv').config();
-// Agrega esto justo después de require('dotenv').config()
-console.log('SUPABASE_URL:', process.env.SUPABASE_URL ? 'OK' : 'MISSING')
-console.log('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'OK' : 'MISSING')
 const { supabaseAdmin } = require('./config/supabase');
 const authRoutes = require('./routes/authRoutes');
 const exerciseRoutes = require('./routes/exerciseRoutes')
@@ -39,5 +36,7 @@ app.use('/api/recipes', recipeRoutes);
 app.use('/api/nutrition', nutritionRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/progress', progressRoutes);
+
+
 
 module.exports = app;
