@@ -40,10 +40,10 @@ function Sidebar() {
       {/* Header */}
       <div className="flex items-center gap-2 px-3 py-4 border-b border-surface-hover">
         <div className="w-7 h-7 rounded-lg bg-strength flex items-center justify-center font-display font-bold text-bg text-sm shrink-0">
-          G
+          Ic
         </div>
         {!collapsed && (
-          <span className="font-display font-bold text-text-primary text-sm">GymApp</span>
+          <span className="font-display font-bold text-text-primary text-sm">IronCore</span>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}

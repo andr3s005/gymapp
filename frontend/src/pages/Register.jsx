@@ -71,7 +71,7 @@ function Register() {
 
       <div className="flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-12">
         <div className="max-w-sm mx-auto w-full">
-          <h1 className="text-2xl font-bold font-display text-strength mb-1">GymApp</h1>
+          <h1 className="text-2xl font-bold font-display text-strength mb-1">IronCore</h1>
           <p className="text-sm text-text-secondary font-body mb-2">Crea tu cuenta</p>
 
           <div className="flex gap-2 mb-8">

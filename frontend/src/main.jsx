@@ -11,3 +11,13 @@ createRoot(document.getElementById('root')).render(
     </BrowserRouter>
   </StrictMode>,
 )
+
+// Registrar Service Worker para PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(
+      (registration) => console.log('SW registrado:', registration.scope),
+      (error) => console.log('SW error:', error)
+    )
+  })
+}

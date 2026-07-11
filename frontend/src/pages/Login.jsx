@@ -35,7 +35,7 @@ function Login() {
 
       <div className="flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-12">
         <div className="max-w-sm mx-auto w-full">
-          <h1 className="text-2xl font-bold font-display text-strength mb-1">GymApp</h1>
+          <h1 className="text-2xl font-bold font-display text-strength mb-1">IronCore</h1>
           <p className="text-sm text-text-secondary font-body mb-8">Inicia sesión en tu cuenta</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
