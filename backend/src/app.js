@@ -18,7 +18,13 @@ const progressRoutes = require('./routes/progressRoutes');
 const app = express();
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://ironcore-five.vercel.app',
+    'http://localhost:5173',
+  ],
+  credentials: true,
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 
