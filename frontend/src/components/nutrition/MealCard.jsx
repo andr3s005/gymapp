@@ -15,21 +15,22 @@ function MealCard({ mealType, log, onAdd, onRemove }) {
   return (
     <div className="bg-surface border border-surface-hover rounded-xl overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3 border-b border-surface-hover">
-        <div className="flex items-center gap-2">
-          <span>{config.emoji}</span>
-          <p className="font-display font-bold text-text-primary text-sm">{config.label}</p>
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="shrink-0">{config.emoji}</span>
+          <p className="font-display font-bold text-text-primary text-sm truncate">{config.label}</p>
           {totalCalories > 0 && (
-            <span className="text-xs text-text-secondary font-body">
+            <span className="text-xs text-text-secondary font-body shrink-0">
               · {Math.round(totalCalories)} kcal
             </span>
           )}
         </div>
         <button
           onClick={() => onAdd(mealType)}
-          className="flex items-center gap-1 bg-strength text-bg text-xs font-bold font-body px-2.5 py-1.5 rounded-lg"
+          className="flex items-center gap-1 bg-strength text-bg text-xs font-bold font-body px-2 py-1.5 rounded-lg shrink-0 ml-2"
         >
           <Plus size={11} />
-          Agregar
+          <span className="hidden sm:inline">Agregar</span>
+          <span className="sm:hidden">+</span>
         </button>
       </div>
 

@@ -29,9 +29,6 @@ function Routines() {
     try {
       const data = await getRoutinesRequest()
       setRoutines(data.routines)
-      if (data.routines.length > 0 && !selectedRoutine) {
-        setSelectedRoutine(data.routines[0])
-      }
     } catch (err) {
       console.error('Error cargando rutinas:', err)
     } finally {
@@ -93,11 +90,11 @@ function Routines() {
     .sort((a, b) => a.order_index - b.order_index) || []
 
   return (
-    <DashboardLayout>
-      <div className="flex h-screen overflow-hidden">
+  <DashboardLayout>
+    <div className="flex h-screen overflow-hidden">
 
-        {/* Panel izquierdo — lista de rutinas */}
-        <div className="w-72 border-r border-surface-hover flex flex-col">
+      {/* Panel izquierdo — lista de rutinas */}
+        <div className={`${selectedRoutine ? 'hidden md:flex' : 'flex'} w-full md:w-72 border-r border-surface-hover flex-col`}>
           <div className="flex items-center justify-between px-6 py-5 border-b border-surface-hover">
             <h1 className="font-display font-bold text-text-primary text-lg">Mis Rutinas</h1>
             <button
@@ -140,7 +137,7 @@ function Routines() {
         </div>
 
         {/* Panel derecho — detalle de rutina */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className={`${selectedRoutine ? 'flex' : 'hidden md:flex'} flex-1 flex-col overflow-hidden`}>
           {!selectedRoutine ? (
             <div className="flex-1 flex items-center justify-center">
               <p className="text-text-secondary font-body text-sm">
@@ -149,27 +146,36 @@ function Routines() {
             </div>
           ) : (
             <>
-              <div className="px-8 py-5 border-b border-surface-hover flex items-start justify-between">
-                <div>
-                  <h2 className="font-display font-bold text-text-primary text-xl">
-                    {selectedRoutine.name}
-                  </h2>
-                  <p className="text-sm text-text-secondary font-body mt-0.5">
-                    {selectedRoutine.description && `${selectedRoutine.description} · `}
-                    {selectedRoutine.estimated_duration_min
-                      ? `${selectedRoutine.estimated_duration_min} min estimados`
-                      : 'Sin duración estimada'}
-                  </p>
+              <div className="px-4 md:px-8 py-5 border-b border-surface-hover flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  {/* Botón volver — solo móvil */}
+                  <button
+                    onClick={() => setSelectedRoutine(null)}
+                    className="md:hidden text-text-secondary hover:text-text-primary"
+                  >
+                    ‹
+                  </button>
+                  <div>
+                    <h2 className="font-display font-bold text-text-primary text-xl">
+                      {selectedRoutine.name}
+                    </h2>
+                    <p className="text-sm text-text-secondary font-body mt-0.5">
+                      {selectedRoutine.description && `${selectedRoutine.description} · `}
+                      {selectedRoutine.estimated_duration_min
+                        ? `${selectedRoutine.estimated_duration_min} min estimados`
+                        : 'Sin duración estimada'}
+                    </p>
+                  </div>
                 </div>
                 <button
                   onClick={() => handleDeleteRoutine(selectedRoutine.id)}
-                  className="text-xs text-effort border border-effort/40 px-3 py-1.5 rounded-lg hover:bg-effort/10 transition-colors font-body"
+                  className="text-xs text-effort border border-effort/40 px-3 py-1.5 rounded-lg hover:bg-effort/10 transition-colors font-body shrink-0"
                 >
                   Eliminar
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-8 py-6 flex flex-col gap-3">
+              <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 flex flex-col gap-3">
                 {sortedExercises.length === 0 && (
                   <p className="text-text-secondary text-sm font-body">
                     Esta rutina no tiene ejercicios todavía.

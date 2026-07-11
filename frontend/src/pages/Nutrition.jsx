@@ -183,25 +183,24 @@ function Nutrition() {
             </div>
 
             {/* Hidratación */}
-            <div className="bg-surface border border-surface-hover rounded-xl px-5 py-4 mb-5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
+            <div className="bg-surface border border-surface-hover rounded-xl px-5 py-4 mb-5">
+              <div className="flex items-center gap-3 mb-3">
                 <span className="text-xl">💧</span>
-                <div>
+                <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold text-text-primary font-display">Hidratación</p>
                   <p className="text-xs font-body mt-0.5" style={{ color: 'var(--color-nutrition)' }}>
                     {waterLog} ml de {DEFAULT_GOALS.water_ml} ml
                   </p>
                 </div>
-                {/* Barra de progreso */}
-                <div className="w-32 h-1.5 bg-surface-hover rounded-full ml-2">
-                  <div
-                    className="h-full rounded-full transition-all"
-                    style={{
-                      width: `${Math.min(waterLog / DEFAULT_GOALS.water_ml * 100, 100)}%`,
-                      backgroundColor: 'var(--color-nutrition)',
-                    }}
-                  />
-                </div>
+              </div>
+              <div className="w-full h-1.5 bg-surface-hover rounded-full mb-3">
+                <div
+                  className="h-full rounded-full transition-all"
+                  style={{
+                    width: `${Math.min(waterLog / DEFAULT_GOALS.water_ml * 100, 100)}%`,
+                    backgroundColor: 'var(--color-nutrition)',
+                  }}
+                />
               </div>
               {isToday && (
                 <div className="flex gap-2">
@@ -209,7 +208,7 @@ function Nutrition() {
                     <button
                       key={amount}
                       onClick={() => handleLogWater(amount)}
-                      className="text-xs px-3 py-1.5 rounded-lg font-body transition-colors border"
+                      className="flex-1 text-xs py-2 rounded-lg font-body transition-colors border"
                       style={{
                         color: 'var(--color-nutrition)',
                         borderColor: 'var(--color-nutrition)',
@@ -224,7 +223,7 @@ function Nutrition() {
             </div>
 
             {/* Grid de comidas */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {MEAL_TYPES.map((mealType) => (
                 <MealCard
                   key={mealType}

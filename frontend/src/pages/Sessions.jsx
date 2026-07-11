@@ -46,9 +46,6 @@ function Sessions() {
     try {
       const data = await getSessionsRequest()
       setSessions(data.sessions)
-      if (data.sessions.length > 0 && !selectedSession) {
-        setSelectedSession(data.sessions[0])
-      }
     } catch (err) {
       console.error('Error cargando sesiones:', err)
     } finally {
@@ -124,11 +121,11 @@ function Sessions() {
   const totalSets = selectedSession?.session_exercises?.length || 0
 
   return (
-    <DashboardLayout>
-      <div className="flex h-screen overflow-hidden">
+  <DashboardLayout>
+    <div className="flex h-screen overflow-hidden">
 
-        {/* Panel izquierdo — historial */}
-        <div className="w-72 border-r border-surface-hover flex flex-col shrink-0">
+      {/* Panel izquierdo — historial */}
+        <div className={`${selectedSession ? 'hidden md:flex' : 'flex'} w-full md:w-72 border-r border-surface-hover flex-col shrink-0`}>
           <div className="px-4 py-5 border-b border-surface-hover">
             <h1 className="font-display font-bold text-text-primary text-lg mb-3">Sesiones</h1>
             <button
@@ -169,7 +166,7 @@ function Sessions() {
         </div>
 
         {/* Panel derecho — detalle */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className={`${selectedSession ? 'flex' : 'hidden md:flex'} flex-1 flex-col overflow-hidden`}>
           {!selectedSession ? (
             <div className="flex-1 flex items-center justify-center">
               <p className="text-text-secondary font-body text-sm">
@@ -178,39 +175,44 @@ function Sessions() {
             </div>
           ) : (
             <>
-              {/* Header de la sesión */}
-              <div className="px-8 py-5 border-b border-surface-hover flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-3 mb-1">
-                    <h2 className="font-display font-bold text-text-primary text-xl">
-                      {selectedSession.routines?.name || 'Sesión libre'}
-                    </h2>
-                    {isActive && (
-                      <span className="text-xs bg-strength/10 text-strength border border-strength/30 px-2.5 py-0.5 rounded-full font-body">
-                        En curso · {elapsed}
-                      </span>
-                    )}
+              <div className="px-4 md:px-8 py-5 border-b border-surface-hover flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  {/* Botón volver — solo móvil */}
+                  <button
+                    onClick={() => setSelectedSession(null)}
+                    className="md:hidden text-text-secondary hover:text-text-primary text-xl"
+                  >
+                    ‹
+                  </button>
+                  <div>
+                    <div className="flex items-center gap-3 mb-1">
+                      <h2 className="font-display font-bold text-text-primary text-xl">
+                        {selectedSession.routines?.name || 'Sesión libre'}
+                      </h2>
+                      {isActive && (
+                        <span className="text-xs bg-strength/10 text-strength border border-strength/30 px-2.5 py-0.5 rounded-full font-body">
+                          En curso · {elapsed}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-text-secondary font-body">
+                      {isActive
+                        ? `${completedSets} de ${totalSets} series completadas`
+                        : `${selectedSession.duration_min || '?'} min · RPE ${selectedSession.perceived_effort || '—'} · ${totalSets} series`
+                      }
+                    </p>
                   </div>
-                  <p className="text-sm text-text-secondary font-body">
-                    {isActive
-                      ? `${completedSets} de ${totalSets} series completadas`
-                      : `${selectedSession.duration_min || '?'} min · RPE ${selectedSession.perceived_effort || '—'} · ${totalSets} series`
-                    }
-                  </p>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 shrink-0">
                   {isActive && (
                     <button
                       onClick={handleFinishSession}
                       disabled={finishingSession}
                       className="text-sm font-bold font-body px-4 py-2 rounded-lg disabled:opacity-60"
-                      style={{
-                        background: 'var(--color-effort)',
-                        color: '#fff',
-                      }}
+                      style={{ background: 'var(--color-effort)', color: '#fff' }}
                     >
-                      {finishingSession ? 'Finalizando...' : 'Finalizar'}
+                      {finishingSession ? '...' : 'Finalizar'}
                     </button>
                   )}
                   {!isActive && (
@@ -224,18 +226,14 @@ function Sessions() {
                 </div>
               </div>
 
-              {/* Ejercicios */}
-              <div className="flex-1 overflow-y-auto px-8 py-6 flex flex-col gap-4">
+              <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 flex flex-col gap-4">
                 {exerciseGroups.length === 0 ? (
                   <p className="text-text-secondary text-sm font-body">
                     Esta sesión no tiene ejercicios registrados.
                   </p>
                 ) : (
                   exerciseGroups.map((group) => (
-                    <div
-                      key={group.exercise?.id}
-                      className="bg-surface border border-surface-hover rounded-xl overflow-hidden"
-                    >
+                    <div key={group.exercise?.id} className="bg-surface border border-surface-hover rounded-xl overflow-hidden">
                       <div className="flex items-center justify-between px-4 py-3 border-b border-surface-hover">
                         <p className="font-display font-bold text-text-primary text-sm">
                           {group.exercise?.name}
@@ -244,13 +242,12 @@ function Sessions() {
                           {group.exercise?.muscle_group}
                         </span>
                       </div>
-
                       <div className="px-4">
                         <div className="grid py-2 text-xs text-text-secondary font-body border-b border-surface-hover"
                           style={{ gridTemplateColumns: '32px 1fr 80px 80px 44px', gap: '12px' }}>
                           <span>Serie</span>
                           <span></span>
-                          <span className="text-center">Peso (kg)</span>
+                          <span className="text-center">Peso</span>
                           <span className="text-center">Reps</span>
                           <span className="text-center">✓</span>
                         </div>
@@ -265,13 +262,6 @@ function Sessions() {
                       </div>
                     </div>
                   ))
-                )}
-
-                {selectedSession.notes && (
-                  <div className="bg-surface border border-surface-hover rounded-xl p-4">
-                    <p className="text-xs text-text-secondary font-body mb-1">Notas</p>
-                    <p className="text-sm text-text-primary font-body">{selectedSession.notes}</p>
-                  </div>
                 )}
               </div>
             </>

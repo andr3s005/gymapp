@@ -200,7 +200,7 @@ function Profile() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {/* Información personal */}
           <div className="bg-surface border border-surface-hover rounded-xl p-6">

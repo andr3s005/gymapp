@@ -79,7 +79,7 @@ function AddExerciseModal({ onClose, onAdd }) {
         </div>
 
         {selected && (
-          <div className="grid grid-cols-4 gap-2 mb-4">
+          <div className="grid grid-cols-2 gap-2 mb-4">
             {[
               { label: 'Series', value: sets, set: setSets },
               { label: 'Reps', value: reps, set: setReps },

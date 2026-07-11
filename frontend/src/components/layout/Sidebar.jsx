@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Dumbbell, ListChecks, Apple, TrendingUp,
   CreditCard, Users, Timer, UserCircle, ChevronLeft, ChevronRight,
-  LogOut, Moon, Sun
+  LogOut, Moon, Sun, Menu, X
 } from 'lucide-react'
 import { useAuthStore } from '../../store/authStore'
 import { useThemeStore } from '../../store/themeStore'
@@ -21,6 +21,7 @@ const navItems = [
 
 function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
@@ -34,9 +35,8 @@ function Sidebar() {
     .join('')
     .toUpperCase() || '?'
 
-  return (
-    <aside className={`flex flex-col bg-surface border-r border-surface-hover transition-all duration-200 ${collapsed ? 'w-16' : 'w-56'}`}>
-
+  const navContent = (
+    <>
       {/* Header */}
       <div className="flex items-center gap-2 px-3 py-4 border-b border-surface-hover">
         <div className="w-7 h-7 rounded-lg bg-strength flex items-center justify-center font-display font-bold text-bg text-sm shrink-0">
@@ -47,9 +47,15 @@ function Sidebar() {
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="ml-auto text-text-secondary hover:text-text-primary"
+          className="ml-auto text-text-secondary hover:text-text-primary hidden lg:block"
         >
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="ml-auto text-text-secondary hover:text-text-primary lg:hidden"
+        >
+          <X size={18} />
         </button>
       </div>
 
@@ -64,6 +70,7 @@ function Sidebar() {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors ${
                   isActive
                     ? 'bg-bg text-text-primary font-medium'
@@ -81,6 +88,7 @@ function Sidebar() {
       <div className="p-2 border-t border-surface-hover">
         <Link
           to="/profile"
+          onClick={() => setMobileOpen(false)}
           className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-bg transition-colors group"
         >
           <div
@@ -120,7 +128,44 @@ function Sidebar() {
           </button>
         )}
       </div>
-    </aside>
+    </>
+  )
+
+  return (
+    <>
+      {/* Botón hamburguesa — solo visible en móvil */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="lg:hidden fixed top-4 left-4 z-50 w-9 h-9 bg-surface border border-surface-hover rounded-lg flex items-center justify-center text-text-primary"
+      >
+        <Menu size={18} />
+      </button>
+
+      {/* Overlay — móvil */}
+      {mobileOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/60 z-40"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar móvil — slide desde la izquierda */}
+      <aside className={`
+        lg:hidden fixed top-0 left-0 h-full z-50 flex flex-col bg-surface border-r border-surface-hover w-64
+        transition-transform duration-200
+        ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
+        {navContent}
+      </aside>
+
+      {/* Sidebar desktop — fijo */}
+      <aside className={`
+        hidden lg:flex flex-col bg-surface border-r border-surface-hover transition-all duration-200
+        ${collapsed ? 'w-16' : 'w-56'}
+      `}>
+        {navContent}
+      </aside>
+    </>
   )
 }
 

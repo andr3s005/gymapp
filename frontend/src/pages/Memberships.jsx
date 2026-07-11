@@ -139,7 +139,7 @@ function Memberships() {
         </p>
 
         {/* Tarjetas de resumen */}
-        <div className="grid grid-cols-4 gap-3.5 mb-7">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-7">
           <div className="bg-surface border border-surface-hover rounded-xl p-4">
             <p className="text-xs text-text-secondary font-body">Total miembros</p>
             <p className="text-2xl font-bold font-display text-strength mt-1.5">{stats.total}</p>
@@ -161,105 +161,127 @@ function Memberships() {
         </div>
 
         {/* Tabla */}
-        <div className="bg-surface border border-surface-hover rounded-xl overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-surface-hover">
-            <p className="font-display font-bold text-text-primary text-sm">Lista de miembros</p>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-1.5 bg-strength text-bg text-xs font-bold font-body px-3 py-1.5 rounded-lg"
-            >
-              <Plus size={13} />
-              Nueva membresía
-            </button>
-          </div>
-
-          {loading ? (
-            <p className="text-text-secondary text-sm font-body text-center py-12">
-              Cargando membresías...
-            </p>
-          ) : memberships.length === 0 ? (
-            <p className="text-text-secondary text-sm font-body text-center py-12">
-              No hay membresías registradas todavía
-            </p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-surface-hover">
-                    {['Usuario', 'Plan', 'Vence', 'Estado', 'Acceso app', 'Acciones'].map((h) => (
-                      <th
-                        key={h}
-                        className="text-left px-6 py-3 text-xs text-text-secondary font-body font-medium"
-                      >
-                        {h}
-                      </th>
-                    ))}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-surface-hover">
+                {['Usuario', 'Plan', 'Vence', 'Estado', 'Acceso app', 'Acciones'].map((h) => (
+                  <th key={h} className="text-left px-6 py-3 text-xs text-text-secondary font-body font-medium">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {memberships.map((membership) => {
+                const secondaryAction = getSecondaryAction(membership)
+                const isProcessing = processingId === membership.id
+                return (
+                  <tr key={membership.id} className="border-b border-surface-hover last:border-0">
+                    <td className="px-6 py-4">
+                      <p className="text-sm text-text-primary font-medium">{membership.profiles?.full_name}</p>
+                      <p className="text-xs text-text-secondary mt-0.5">{membership.profiles?.email}</p>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-text-primary font-body">
+                      {planLabels[membership.plan_type] || membership.plan_type}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-text-primary font-body">
+                      {formatDate(membership.end_date)}
+                    </td>
+                    <td className="px-6 py-4">
+                      <MembershipStatusBadge status={membership.status} />
+                    </td>
+                    <td className="px-6 py-4">
+                      <AppAccessBadge access={membership.app_access} />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
+                        {membership.status !== 'cancelled' && (
+                          <button
+                            onClick={() => handleRenew(membership)}
+                            disabled={isProcessing}
+                            className="text-xs px-3 py-1.5 rounded-lg bg-bg border border-surface-hover text-text-secondary hover:text-text-primary font-body disabled:opacity-40"
+                          >
+                            Renovar
+                          </button>
+                        )}
+                        {secondaryAction && (
+                          <button
+                            onClick={() => handleUpdateStatus(membership, secondaryAction.status)}
+                            disabled={isProcessing}
+                            className="text-xs px-3 py-1.5 rounded-lg border font-body disabled:opacity-40"
+                            style={{
+                              color: 'var(--color-effort)',
+                              borderColor: 'var(--color-effort)',
+                              backgroundColor: 'var(--color-effort)1A',
+                            }}
+                          >
+                            {isProcessing ? '...' : secondaryAction.label}
+                          </button>
+                        )}
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {memberships.map((membership) => {
-                    const secondaryAction = getSecondaryAction(membership)
-                    const isProcessing = processingId === membership.id
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
 
-                    return (
-                      <tr
-                        key={membership.id}
-                        className="border-b border-surface-hover last:border-0"
-                      >
-                        <td className="px-6 py-4">
-                          <p className="text-sm text-text-primary font-medium">
-                            {membership.profiles?.full_name}
-                          </p>
-                          <p className="text-xs text-text-secondary mt-0.5">
-                            {membership.profiles?.email}
-                          </p>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-text-primary font-body">
-                          {planLabels[membership.plan_type] || membership.plan_type}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-text-primary font-body">
-                          {formatDate(membership.end_date)}
-                        </td>
-                        <td className="px-6 py-4">
-                          <MembershipStatusBadge status={membership.status} />
-                        </td>
-                        <td className="px-6 py-4">
-                          <AppAccessBadge access={membership.app_access} />
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex gap-2">
-                            {membership.status !== 'cancelled' && (
-                              <button
-                                onClick={() => handleRenew(membership)}
-                                disabled={isProcessing}
-                                className="text-xs px-3 py-1.5 rounded-lg bg-bg border border-surface-hover text-text-secondary hover:text-text-primary font-body disabled:opacity-40"
-                              >
-                                Renovar
-                              </button>
-                            )}
-                            {secondaryAction && (
-                              <button
-                                onClick={() => handleUpdateStatus(membership, secondaryAction.status)}
-                                disabled={isProcessing}
-                                className="text-xs px-3 py-1.5 rounded-lg border font-body disabled:opacity-40"
-                                style={{
-                                  color: 'var(--color-effort)',
-                                  borderColor: 'var(--color-effort)',
-                                  backgroundColor: 'var(--color-effort)1A',
-                                }}
-                              >
-                                {isProcessing ? '...' : secondaryAction.label}
-                              </button>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
+        {/* Tarjetas — móvil */}
+        <div className="md:hidden divide-y divide-surface-hover">
+          {memberships.map((membership) => {
+            const secondaryAction = getSecondaryAction(membership)
+            const isProcessing = processingId === membership.id
+            return (
+              <div key={membership.id} className="px-4 py-4 flex flex-col gap-2">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-text-primary font-medium">{membership.profiles?.full_name}</p>
+                    <p className="text-xs text-text-secondary mt-0.5">{membership.profiles?.email}</p>
+                  </div>
+                  <MembershipStatusBadge status={membership.status} />
+                </div>
+
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="text-xs text-text-secondary font-body">
+                    {planLabels[membership.plan_type]}
+                  </span>
+                  <span className="text-xs text-text-secondary font-body">·</span>
+                  <span className="text-xs text-text-secondary font-body">
+                    Vence {formatDate(membership.end_date)}
+                  </span>
+                  <AppAccessBadge access={membership.app_access} />
+                </div>
+
+                <div className="flex gap-2 mt-1">
+                  {membership.status !== 'cancelled' && (
+                    <button
+                      onClick={() => handleRenew(membership)}
+                      disabled={isProcessing}
+                      className="flex-1 text-xs py-2 rounded-lg bg-bg border border-surface-hover text-text-secondary font-body disabled:opacity-40"
+                    >
+                      Renovar
+                    </button>
+                  )}
+                  {secondaryAction && (
+                    <button
+                      onClick={() => handleUpdateStatus(membership, secondaryAction.status)}
+                      disabled={isProcessing}
+                      className="flex-1 text-xs py-2 rounded-lg border font-body disabled:opacity-40"
+                      style={{
+                        color: 'var(--color-effort)',
+                        borderColor: 'var(--color-effort)',
+                        backgroundColor: 'var(--color-effort)1A',
+                      }}
+                    >
+                      {isProcessing ? '...' : secondaryAction.label}
+                    </button>
+                  )}
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
 
