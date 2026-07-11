@@ -10,6 +10,7 @@ import {
   getMyClientsRequest,
   setAvailabilityRequest,
 } from '../services/coachService'
+import { checkMembershipStatusRequest } from '../services/membershipService'
 import { useAuthStore } from '../store/authStore'
 
 function Coaches() {
@@ -20,16 +21,30 @@ function Coaches() {
   const [coaches, setCoaches] = useState([])
   const [myCoachId, setMyCoachId] = useState(null)
   const [clients, setClients] = useState([])
+  const [membershipStatus, setMembershipStatus] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showAvailabilityModal, setShowAvailabilityModal] = useState(false)
   const [error, setError] = useState('')
 
-  // Verificar si hoy es el primero del mes (para permitir cambio de coach)
   const canChangeCoach = new Date().getDate() === 1
 
   useEffect(() => {
     loadData()
   }, [])
+
+  useEffect(() => {
+    async function checkMembership() {
+      if (!isCoach && !isAdmin && user?.id) {
+        try {
+          const data = await checkMembershipStatusRequest(user.id)
+          setMembershipStatus(data)
+        } catch (err) {
+          console.error('Error verificando membresía:', err)
+        }
+      }
+    }
+    checkMembership()
+  }, [user])
 
   async function loadData() {
     setLoading(true)
@@ -75,6 +90,9 @@ function Coaches() {
 
   const myCoach = coaches.find((c) => c.id === myCoachId)
   const otherCoaches = coaches.filter((c) => c.id !== myCoachId)
+  const hasCoachAccess = isAdmin || isCoach ||
+    membershipStatus?.membership?.coach_included ||
+    membershipStatus?.is_admin
 
   return (
     <DashboardLayout>
@@ -162,47 +180,67 @@ function Coaches() {
             )}
           </div>
         ) : (
-          // Vista del usuario — grid de coaches
+          // Vista del usuario
           <div className="flex flex-col gap-6">
-            {myCoach && (
-              <div>
-                <p className="text-xs text-text-secondary font-body mb-3 uppercase tracking-wide">
-                  Tu coach actual
+            {!hasCoachAccess ? (
+              // Sin acceso a coach por plan
+              <div className="bg-surface border border-surface-hover rounded-xl p-8 text-center max-w-lg mx-auto">
+                <p className="font-display font-bold text-text-primary text-base mb-2">
+                  Tu plan no incluye coach
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <CoachCard
-                    coach={myCoach}
-                    isMyCoach={true}
-                    onUnassign={handleUnassign}
-                    canChange={canChangeCoach}
-                  />
-                </div>
-              </div>
-            )}
-
-            {otherCoaches.length > 0 && (
-              <div>
-                <p className="text-xs text-text-secondary font-body mb-3 uppercase tracking-wide">
-                  {myCoach ? 'Otros coaches disponibles' : 'Coaches disponibles'}
+                <p className="text-text-secondary text-sm font-body mb-4 leading-relaxed">
+                  El servicio de coach está disponible en planes trimestrales o superiores,
+                  o con un costo adicional en el plan mensual.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {otherCoaches.map((coach) => (
-                    <CoachCard
-                      key={coach.id}
-                      coach={coach}
-                      isMyCoach={false}
-                      onAssign={handleAssign}
-                      canChange={canChangeCoach}
-                    />
-                  ))}
-                </div>
+                <p className="text-xs text-text-secondary font-body">
+                  Habla con el administrador del gimnasio para actualizar tu plan
+                  o agregar el servicio de coach a tu membresía actual.
+                </p>
               </div>
-            )}
+            ) : (
+              // Con acceso a coach
+              <>
+                {myCoach && (
+                  <div>
+                    <p className="text-xs text-text-secondary font-body mb-3 uppercase tracking-wide">
+                      Tu coach actual
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <CoachCard
+                        coach={myCoach}
+                        isMyCoach={true}
+                        onUnassign={handleUnassign}
+                        canChange={canChangeCoach}
+                      />
+                    </div>
+                  </div>
+                )}
 
-            {coaches.length === 0 && (
-              <p className="text-text-secondary text-sm font-body text-center py-12">
-                No hay coaches registrados todavía
-              </p>
+                {otherCoaches.length > 0 && (
+                  <div>
+                    <p className="text-xs text-text-secondary font-body mb-3 uppercase tracking-wide">
+                      {myCoach ? 'Otros coaches disponibles' : 'Coaches disponibles'}
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {otherCoaches.map((coach) => (
+                        <CoachCard
+                          key={coach.id}
+                          coach={coach}
+                          isMyCoach={false}
+                          onAssign={handleAssign}
+                          canChange={canChangeCoach}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {coaches.length === 0 && (
+                  <p className="text-text-secondary text-sm font-body text-center py-12">
+                    No hay coaches registrados todavía
+                  </p>
+                )}
+              </>
             )}
           </div>
         )}
