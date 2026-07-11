@@ -1,4 +1,4 @@
-import { Dumbbell, PersonStanding, Footprints, ArrowUpFromLine, BicepsFlexed, CircleDot, HeartPulse, Sparkles } from 'lucide-react'
+import { Dumbbell, PersonStanding, Footprints, ArrowUpFromLine, BicepsFlexed, CircleDot, HeartPulse, Sparkles, Pencil, Trash2 } from 'lucide-react'
 
 const difficultyColors = {
   beginner: 'var(--color-nutrition)',
@@ -23,12 +23,12 @@ const muscleGroupConfig = {
   full_body: { label: 'Cuerpo completo', icon: Sparkles },
 }
 
-function ExerciseCard({ exercise }) {
+function ExerciseCard({ exercise, isAdmin, onEdit, onDelete }) {
   const config = muscleGroupConfig[exercise.muscle_group]
   const MuscleIcon = config?.icon || Dumbbell
 
   return (
-    <div className="bg-surface border border-surface-hover rounded-xl p-4 flex flex-col gap-2 hover:border-strength/40 transition-colors cursor-pointer">
+    <div className="bg-surface border border-surface-hover rounded-xl p-4 flex flex-col gap-2 hover:border-strength/40 transition-colors group">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-bg flex items-center justify-center shrink-0">
@@ -38,11 +38,29 @@ function ExerciseCard({ exercise }) {
             {exercise.name}
           </h3>
         </div>
-        {exercise.is_custom && (
-          <span className="text-xs text-nutrition bg-nutrition/10 px-2 py-0.5 rounded-full shrink-0 ml-2">
-            Propio
-          </span>
-        )}
+        <div className="flex items-center gap-1">
+          {exercise.is_custom && (
+            <span className="text-xs text-nutrition bg-nutrition/10 px-2 py-0.5 rounded-full shrink-0 ml-2">
+              Propio
+            </span>
+          )}
+          {isAdmin && (
+            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-1">
+              <button
+                onClick={() => onEdit(exercise)}
+                className="w-6 h-6 rounded-md bg-bg flex items-center justify-center text-text-secondary hover:text-strength transition-colors"
+              >
+                <Pencil size={11} />
+              </button>
+              <button
+                onClick={() => onDelete(exercise.id)}
+                className="w-6 h-6 rounded-md bg-bg flex items-center justify-center text-text-secondary hover:text-effort transition-colors"
+              >
+                <Trash2 size={11} />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <p className="text-xs text-text-secondary font-body pl-9">
