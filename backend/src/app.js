@@ -14,6 +14,7 @@ const foodRoutes = require('./routes/foodRoutes');
 const recipeRoutes = require('./routes/recipeRoutes');
 const nutritionRoutes = require('./routes/nutritionRoutes');
 const sessionRoutes = require('./routes/sessionRoutes');
+const progressRoutes = require('./routes/progressRoutes');
 
 const app = express();
 
@@ -35,5 +36,6 @@ app.use('/api/foods', foodRoutes);
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/nutrition', nutritionRoutes);
 app.use('/api/sessions', sessionRoutes);
+app.use('/api/progress', progressRoutes);
 
 module.exports = app;
