@@ -258,6 +258,32 @@ async function renewMembership(req, res) {
 async function checkMembershipStatus(req, res) {
   const { userId } = req.params
 
+  // El admin siempre tiene acceso completo sin necesitar membresía
+  const { data: profile } = await supabaseAdmin
+    .from('profiles')
+    .select('role')
+    .eq('id', userId)
+    .single()
+
+  if (profile?.role === 'admin') {
+    return res.json({
+      has_active_membership: true,
+      app_access: 'full',
+      membership: null,
+      is_admin: true,
+    })
+  }
+
+  // Para coaches también acceso completo
+  if (profile?.role === 'coach') {
+    return res.json({
+      has_active_membership: true,
+      app_access: 'full',
+      membership: null,
+      is_coach: true,
+    })
+  }
+
   const { data, error } = await supabaseAdmin
     .from('memberships')
     .select('id, status, end_date, grace_period_end, plan_type, app_access')

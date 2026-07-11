@@ -229,4 +229,16 @@ async function updatePassword(req, res) {
   res.json({ message: 'Contraseña actualizada correctamente' })
 }
 
-module.exports = { register, login, me, adminCreateUser, getUsers, updateProfile, updatePassword };
+async function deleteUser(req, res) {
+  const { id } = req.params
+
+  const { error } = await supabaseAdmin.auth.admin.deleteUser(id)
+
+  if (error) {
+    return res.status(400).json({ error: error.message })
+  }
+
+  res.json({ message: 'Usuario eliminado correctamente' })
+}
+
+module.exports = { register, login, me, adminCreateUser, getUsers, updateProfile, updatePassword, deleteUser }

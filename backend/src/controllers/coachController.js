@@ -3,22 +3,26 @@ const { supabaseAdmin } = require('../config/supabase');
 // GET /api/coaches — lista todos los coaches con su disponibilidad
 async function getCoaches(req, res) {
   const { data, error } = await supabaseAdmin
-    .from('profiles')
-    .select(`
+  .from('profiles')
+  .select(`
+    id,
+    full_name,
+    email,
+    specialty,
+    avatar_url,
+    coach_availability (
       id,
-      full_name,
-      email,
-      specialty,
-      avatar_url,
-      coach_availability (
-        id,
-        day_of_week,
-        start_time,
-        end_time
-      )
-    `)
-    .eq('role', 'coach')
-    .order('full_name')
+      day_of_week,
+      start_time,
+      end_time
+    ),
+    coach_assignments!coach_id (
+      id,
+      active
+    )
+  `)
+  .eq('role', 'coach')
+  .order('full_name')
 
   if (error) {
     return res.status(500).json({ error: error.message })
