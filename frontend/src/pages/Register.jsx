@@ -100,6 +100,7 @@ function Register() {
                   value={formData.email}
                   onChange={(e) => updateField('email', e.target.value)}
                   required
+                  autoComplete="email"
                   className="w-full bg-surface border border-surface-hover rounded-lg px-4 py-2.5 text-text-primary font-body text-sm focus:outline-none focus:border-strength"
                   placeholder="nombre@correo.com"
                 />
@@ -112,6 +113,7 @@ function Register() {
                   value={formData.password}
                   onChange={(e) => updateField('password', e.target.value)}
                   required
+                  autoComplete="new-password"
                   className="w-full bg-surface border border-surface-hover rounded-lg px-4 py-2.5 text-text-primary font-body text-sm focus:outline-none focus:border-strength"
                   placeholder="Mínimo 8 caracteres"
                 />

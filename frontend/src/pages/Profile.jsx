@@ -32,7 +32,7 @@ function InfoRow({ label, value, highlight }) {
   )
 }
 
-function InputField({ label, type = 'text', value, onChange, placeholder }) {
+function InputField({ label, type = 'text', value, onChange, placeholder, autoComplete }) {
   return (
     <div>
       <label className="text-sm text-text-secondary font-body block mb-1.5">{label}</label>
@@ -41,6 +41,7 @@ function InputField({ label, type = 'text', value, onChange, placeholder }) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         className="w-full bg-bg border border-surface-hover rounded-lg px-4 py-2.5 text-text-primary font-body text-sm focus:outline-none focus:border-strength"
       />
     </div>
@@ -320,6 +321,7 @@ function Profile() {
                   value={currentPassword}
                   onChange={setCurrentPassword}
                   placeholder="••••••••"
+                  autoComplete="current-password"
                 />
                 <InputField
                   label="Nueva contraseña"
@@ -327,6 +329,7 @@ function Profile() {
                   value={newPassword}
                   onChange={setNewPassword}
                   placeholder="Mínimo 8 caracteres"
+                  autoComplete="new-password"
                 />
                 <InputField
                   label="Confirmar nueva contraseña"
@@ -334,6 +337,7 @@ function Profile() {
                   value={confirmPassword}
                   onChange={setConfirmPassword}
                   placeholder="Repite la nueva contraseña"
+                  autoComplete="new-password"
                 />
 
                 {passwordError && <p className="text-sm text-effort font-body">{passwordError}</p>}
