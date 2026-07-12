@@ -1,5 +1,7 @@
+console.log('Iniciando servidor...')
 const path = require('path')
 const app = require(path.join(__dirname, 'src', 'app'))
+console.log('App cargada correctamente')
 
 const PORT = process.env.PORT || 3000;
 
