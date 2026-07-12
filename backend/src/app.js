@@ -19,11 +19,10 @@ const progressRoutes = require('./routes/progressRoutes');
 const app = express();
 
 const corsOptions = {
-  origin: [
-    'https://ironcore-five.vercel.app',
-    'http://localhost:5173',
-  ],
-  credentials: true,
+  origin: '*',
+  credentials: false,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }
 // Middleware manual para CORS preflight
 app.use((req, res, next) => {
